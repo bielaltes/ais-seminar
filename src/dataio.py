@@ -80,10 +80,11 @@ def load_pois(pois_path, districts_path):
     df["district"] = _match_to_canonical(df["district"], DISTRICTS, "district")
 
     districts = load_districts(districts_path)
-    df = df.merge(districts[["district", "tourist_density_per_km2"]], on="district", how="left")
+    df = df.merge(districts[["district", "tourist_accommodation_share_pct", "area_km2"]], on="district", how="left")
+    df["district_pressure"] = df["tourist_accommodation_share_pct"] / df["area_km2"]
 
     df["popularity"] = _build_popularity(df)
-    df["low_pressure"] = 1.0 - _minmax(df["tourist_density_per_km2"].fillna(df["tourist_density_per_km2"].median()))
+    df["low_pressure"] = 1.0 - _minmax(df["district_pressure"])
     df["environmental"] = df["is_green"].fillna(0).astype(float).clip(0, 1)
     df["accessibility"] = df["wheelchair_accessible"].fillna("unknown").map(ACCESSIBILITY_SCORE).fillna(0.5)
     df["cultural"] = df["heritage_protected"].fillna("unknown").map(HERITAGE_SCORE).fillna(0.3)
@@ -102,8 +103,13 @@ def _build_popularity(df):
     return _minmax(source)
 
 
+DEFAULT_DAILY_CAPACITY = 1500.0
+
+
 def _build_capacity(df):
-    """Daily capacity: the official figure when known, else scaled by popularity."""
-    official = df["capacity_daily"].astype(float)
-    scaled = 200.0 + 4800.0 * df["popularity"]
-    return official.fillna(scaled)
+    """Daily capacity: the official figure when known, else a flat default.
+
+    The default is kept independent of popularity on purpose, so that crowding
+    emerges from demand rather than from the capacity rule itself.
+    """
+    return df["capacity_daily"].astype(float).fillna(DEFAULT_DAILY_CAPACITY)
