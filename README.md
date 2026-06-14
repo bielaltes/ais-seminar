@@ -1,12 +1,37 @@
 # Sustainable POI recommender — agent-based evaluation (Barcelona)
 
-An agent-based simulator to evaluate a sustainability-aware Point-of-Interest
-recommender for Barcelona, comparing it against simpler baselines.
+This repository contains an agent-based simulator that **evaluates** a multi-criteria,
+sustainability-aware Point-of-Interest (POI) recommender for Barcelona. It compares four
+recommendation strategies and measures whether the sustainability-aware one reduces overcrowding at the
+famous spots and spreads tourists more evenly across the city.
 
-## Plan
+The four strategies compared are:
 
-- a tourist profile model and a population generator
-- a Barcelona POI dataset (Open Data BCN, Wikipedia pageviews, OpenStreetMap)
-- recommenders: popularity, interests, sustainability-aware, random
-- a Mesa simulation with crowding
-- evaluation metrics and a Streamlit demo
+- **Popularity** — ranks POIs by their popularity, ignoring the tourist profile.
+- **Interests** — ranks POIs by how well their category matches the tourist's interests.
+- **Sustainability-aware** — a multi-criteria recommender (ELECTRE-III) that balances the tourist's
+  preferences with environmental, social, cultural and economic criteria.
+- **Random** — a uniform baseline used as a lower bound.
+
+## Layout
+
+```
+data/        the Barcelona POI dataset and district indicators
+src/         profiles, data loading, recommenders, simulation, metrics, experiment runner
+demo/        a Streamlit dashboard that shows the simulation results
+results/     generated tables and figures
+```
+
+## How to run
+
+```bash
+pip install -r requirements.txt
+python -m src.experiment        # runs the four strategies and writes results/
+streamlit run demo/streamlit_app.py
+```
+
+## Data
+
+The dataset is built from public, citable sources (Open Data BCN, Wikimedia Pageviews, the Observatori del
+Turisme a Barcelona, OpenStreetMap and the Generalitat heritage registry). The full list of references is
+given in the written report.
