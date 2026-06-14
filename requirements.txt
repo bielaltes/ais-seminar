@@ -2,3 +2,6 @@ mesa>=3.0
 pyDecision
 pandas
 numpy
+matplotlib
+streamlit
+pydeck
