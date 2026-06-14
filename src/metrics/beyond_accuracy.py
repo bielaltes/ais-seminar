@@ -29,14 +29,30 @@ def beyond_accuracy_metrics(result, pois, k=10):
     prob = prob / prob.sum()
     novelty_of = {pid: -np.log2(p) for pid, p in zip(pois["poi_id"], prob)}
 
-    diversity, novelty, recommended = [], [], set()
+    diversity, novelty, recommended, top_sets = [], [], set(), []
     for t in result["tourists"]:
         top_k = t["recommended"][:k]
         recommended.update(top_k)
+        top_sets.append(set(top_k))
         diversity.append(_intra_list_diversity(top_k, poi))
         novelty.append(float(np.mean([novelty_of[pid] for pid in top_k])))
     return {
         "diversity": float(np.mean(diversity)),
         "novelty": float(np.mean(novelty)),
         "coverage": len(recommended) / len(pois),
+        "personalisation": _personalisation(top_sets, k),
     }
+
+
+def _personalisation(top_sets, k, n_pairs=4000, seed=123):
+    """Average dissimilarity between the recommendation lists of different tourists."""
+    rng = np.random.default_rng(seed)
+    n = len(top_sets)
+    if n < 2:
+        return 0.0
+    overlaps = []
+    for _ in range(n_pairs):
+        i, j = int(rng.integers(0, n)), int(rng.integers(0, n))
+        if i != j:
+            overlaps.append(len(top_sets[i] & top_sets[j]) / k)
+    return float(1.0 - np.mean(overlaps))

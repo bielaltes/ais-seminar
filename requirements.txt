@@ -1,5 +1,6 @@
 mesa>=3.0
 pyDecision
+scikit-learn
 pandas
 numpy
 matplotlib
