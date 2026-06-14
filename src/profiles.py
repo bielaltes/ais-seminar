@@ -20,6 +20,7 @@ class Profile:
     group_size: int
     trip_length: int         # number of POIs the tourist plans to visit
     home_district: str       # district of the hotel / entry point
+    weather: str             # context for the trip: "sunny" or "rainy"
 
 
 def _sample_interests(rng):
@@ -49,6 +50,7 @@ def generate_population(n, seed=0):
             group_size=int(rng.integers(1, 6)),
             trip_length=int(rng.integers(3, 9)),
             home_district=str(rng.choice(DISTRICTS)),
+            weather=str(rng.choice(["sunny", "rainy"], p=[0.7, 0.3])),
         )
         population.append(profile)
     return population
