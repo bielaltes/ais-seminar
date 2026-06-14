@@ -27,8 +27,15 @@ results/     generated tables and figures
 ```bash
 pip install -r requirements.txt
 python -m src.experiment        # runs the four strategies and writes results/
+python -m src.analysis          # context, segmentation and aggregation studies
+python -m src.figures           # builds the figures in results/
 streamlit run demo/streamlit_app.py
 ```
+
+On top of the main comparison, `src/analysis.py` adds three seminar-grounded
+studies: a context-aware post-filter that reacts to the weather, a k-means
+segmentation of the tourists, and a comparison of ELECTRE-III against a weighted
+average together with per-criterion explanations.
 
 ## Data
 

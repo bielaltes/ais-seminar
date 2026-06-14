@@ -1,0 +1,4 @@
+tourist,top_recommendation,category,district,preference_fit,low_pressure,environmental,accessibility,cultural,local_economy
+museum lover,Museu Nacional d'Art de Catalunya,museum,Sants-Montjuïc,0.86,0.94,0.0,1.0,1.0,0.35
+religious-site lover,Parc del Laberint d'Horta,park_nature,Horta-Guinardó,0.18,0.99,1.0,0.5,0.7,0.87
+nature lover,Parc del Laberint d'Horta,park_nature,Horta-Guinardó,0.86,0.99,1.0,0.5,0.7,0.87

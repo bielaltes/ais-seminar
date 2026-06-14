@@ -76,3 +76,15 @@ class SustainabilityRecommender(Recommender):
         row = pois.index[pois["poi_id"] == poi_id][0]
         values = _matrix(profile, pois.loc[[row]])[0]
         return {c: float(w * v) for c, w, v in zip(CRITERIA, weights, values)}
+
+
+class WeightedAverageRecommender(Recommender):
+    """Same criteria and weights as the ELECTRE recommender, ranked by a weighted average."""
+
+    name = "weighted_average"
+
+    def __init__(self):
+        self._mcda = SustainabilityRecommender()
+
+    def recommend(self, profile, pois):
+        return self._mcda.weighted_average_ranking(profile, pois)

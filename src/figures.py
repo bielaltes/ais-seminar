@@ -49,11 +49,26 @@ def _visit_maps(poi_visits, path):
     plt.close()
 
 
+def _segments(out):
+    path = out / "segments.csv"
+    if not path.exists():
+        return
+    seg = pd.read_csv(path).set_index("segment")
+    ax = seg[["precision", "visited_low_pressure"]].plot(kind="bar", figsize=(8, 4.5), rot=0)
+    ax.set_title("Outcomes per tourist segment (sustainability recommender)")
+    ax.set_xlabel("segment (dominant interest)")
+    ax.legend(loc="best", fontsize=8)
+    plt.tight_layout()
+    plt.savefig(out / "fig_segments.png", dpi=150)
+    plt.close()
+
+
 def make_figures(results_dir):
     out = Path(results_dir)
     metrics = pd.read_csv(out / "metrics.csv", index_col="strategy")
     district_visits = pd.read_csv(out / "district_visits.csv", index_col="district")
     poi_visits = pd.read_csv(out / "poi_visits.csv")
+    _segments(out)
 
     _grouped_bar(metrics, ["precision", "recall", "f1", "ndcg"], "Accuracy metrics", out / "fig_accuracy.png")
     _grouped_bar(metrics, ["diversity", "coverage"], "Diversity and coverage", out / "fig_beyond.png")
